@@ -2,11 +2,11 @@
   "name": "node_db",
   "version": "0.0.1",
   "private": true,
-  "scripts": {
-  },
+  "scripts": {},
   "dependencies": {
     "body-parser": "~1.18.2",
     "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
     "express": "~4.15.5",
     "mongoose": "^4.13.7",
     "mysql": "^2.15.0",
