@@ -57,6 +57,7 @@ async function showDatabaseInfo() {
         const columnsCount = await query(queryTableColumnsCountSql).then((results) => results[0].count);
         stream.write([i+1, table_name, columnsCount, count, size]);
     }
+    console.log();
     return tables;
 }
 
