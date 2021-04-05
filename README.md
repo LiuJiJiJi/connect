@@ -1,19 +1,14 @@
-# node connect util
+# connect util
 
-### start
-
-```shell
-yarn
-cp -r .env.example .env
-```
-### connect to db
+### middleware type
 + redis
-    ```shell
-    # update redis conncet config on .env
-    $ node redis/app.js
-    ```
 + mysql
-    ```shell
-    # update mysql conncet config on .env
-    $ node mysql/app.js
-    ```
++ mongodb
++ postgres
++ elasticsearch
++ kafuka
+
+### [node](./node)
+### [java](./java)
+
+### [python](./python)    
