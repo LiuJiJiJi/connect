@@ -1,4 +1,7 @@
 const mysql = require('mysql');
+const table = require('table').table;
+const createStream = require('table').createStream;
+const _ = require('lodash');
 const genratePassword = require('../util/generateUtil').generatePassword;
 const readSyncByRl = require('../util/fsUtil').readSyncByRl;
 const mysqlConfig = require('../config').mysql; 
@@ -32,11 +35,21 @@ async function query(sql) {
 async function showDatabaseInfo() {
     const queryTablseSql = `select table_name from information_schema.tables where table_schema='${currentDatabase}';`;
     const tables = await query(queryTablseSql);
+    let stream = createStream({
+        columnDefault: { width: 50 },
+        columnCount: 3,
+        columns: {
+            0: { width: 5, alignment: 'left' },
+            1: { width: 20, alignment: 'center'  },
+            2: { width: 20, alignment: 'left'  }
+        }
+    });
+    stream.write([null, 'table name', 'row count']);
     for (let i = 0; i < tables.length; i++) {
-        const table = tables[i];
-        const queryTableRowCountSql = `select count(1) count from ${table.table_name};`;
+        const table_name = tables[i].table_name;
+        const queryTableRowCountSql = `select count(1) count from ${table_name};`;
         const count = await query(queryTableRowCountSql).then(results=> results[0].count);
-        console.log(table.table_name, count);
+        stream.write([i+1, table_name, count]);
     }
     return tables;
 }
@@ -146,6 +159,28 @@ async function createNewDatabaseAndUsername() {
 }
 
 
+function tablePrintDemo() {
+    const data = [
+        ['0A', '0B', '0C'],
+        ['1A', '1B', '1C'],
+        ['2A', '2B', '2C']
+    ];
+    console.log(table(data));
+    let stream = createStream({
+        columnDefault: { width: 50 },
+        columnCount: 3,
+        columns: {
+            0: { width: 10, alignment: 'right' },
+            1: { alignment: 'center', },
+            2: { width: 10 }
+        }
+    });
+    let i = 0;
+    setInterval(() => {
+        let random = _.sampleSize('abcdefghijklmnopqrstuvwxyz', _.random(1, 30)).join('');
+        stream.write([i++, new Date(), random]);
+    }, 500);
+}
 
 
 

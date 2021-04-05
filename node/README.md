@@ -17,3 +17,9 @@ cp -r .env.example .env
     # update mysql conncet config on .env
     $ node mysql/app.js
     ```
+
+
+### Reference
+
++ [table](https://www.npmjs.com/package/table)
++ [lodash](https://lodash.com/docs)
