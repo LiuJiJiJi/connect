@@ -1,14 +1,10 @@
 const redis = require('redis');
 const config = require('../config');
-const path  = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../', '.env')});
 const redisConfig = config.redis;
-const redisOpts = {auth_pass: process.env.REDIS_PWD};
-const client = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST, redisOpts);
+const redisOpts = {auth_pass: redisConfig.password};
+const client = redis.createClient(redisConfig.port, redisConfig.host, redisOpts);
 
-// console.log('pwd:', process.cwd() + "/.env")
-// console.log('__dirname:', __dirname)
-// console.log('env path:', path.join(__dirname, '../', '.env'))
+
 
 client.on('connect',function(){
     console.log('redis connect success!');
@@ -19,7 +15,7 @@ client.on('ready',function(res){
 });
               
 client.on('error', function (err) {
-    console.log(err);
+    console.log('error', err);
 });
 
 client.on('end',function(err){
