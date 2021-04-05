@@ -10,6 +10,9 @@ module.exports = {
         host: process.env.MONGODB_HOST,
         port: process.env.REDIS_PORT,
         password: process.env.REDIS_PASSWORD,
+    },
+    mysql: {
+        url: process.env.MYSQL_URL,
     }
 }
 
