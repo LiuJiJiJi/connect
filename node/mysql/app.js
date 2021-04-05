@@ -2,13 +2,20 @@ const mysql = require('mysql');
 const genratePassword = require('../util/generateUtil').generatePassword;
 const readSyncByRl = require('../util/fsUtil').readSyncByRl;
 const mysqlConfig = require('../config').mysql; 
-const connection = mysql.createConnection({
-    host     : mysqlConfig.host,
-    port     : mysqlConfig.port,
-    user     : mysqlConfig.user,
-    password : mysqlConfig.password,
-    database : mysqlConfig.database
-});
+// User url connect
+const connection = mysql.createConnection(mysqlConfig.url);
+const url = new URL(mysqlConfig.url);
+const currentDatabase = url.pathname.replace('/', '');
+// Use param connect ---> If password contains special characters; you should use this style
+// const connection = mysql.createConnection({
+//     host     : mysqlConfig.host,
+//     port     : mysqlConfig.port,
+//     user     : mysqlConfig.user,
+//     password : mysqlConfig.password,
+//     database : mysqlConfig.database,
+//     timezone : 'Asia/Shanghai', 
+// });
+
 
 async function query(sql) {
     return new Promise((resolve, reject) => {
@@ -23,8 +30,15 @@ async function query(sql) {
  * Show database info
  */
 async function showDatabaseInfo() {
-    const sql = 'SHOW TABLES;'
-    return await query(sql);
+    const queryTablseSql = `select table_name from information_schema.tables where table_schema='${currentDatabase}';`;
+    const tables = await query(queryTablseSql);
+    for (let i = 0; i < tables.length; i++) {
+        const table = tables[i];
+        const queryTableRowCountSql = `select count(1) count from ${table.table_name};`;
+        const count = await query(queryTableRowCountSql).then(results=> results[0].count);
+        console.log(table.table_name, count);
+    }
+    return tables;
 }
 
 /**
@@ -60,6 +74,23 @@ async function showDatabaseInfo() {
 }
 
 /**
+ * Update password
+ * user: not root user
+ */
+ async function refreshPassword() {
+    console.error("=========================Refresh Password")
+    const user = await readSyncByRl(`[Refresh Password]Please Input user name:`);
+    const newPassword = genratePassword(64, true, true, true, false);
+    const sql = `update user set authentication_string=password('${newPassword}') where user='${user}';`
+    console.group('Refresh Password');
+    console.log(`MYSQL_USER=${user}`);
+    console.log(`MYSQL_PASSWORD=${newPassword}`);
+    console.groupEnd();
+    await query(sql);
+    return query('flush privileges;');
+}
+
+/**
  * Create table
  */
  async function createTable() {
@@ -81,7 +112,7 @@ async function createNewDatabaseAndUsername() {
     return new Promise(async(resolve, reject) => {
         const newDatabase = await readSyncByRl('Please Input new database name:');
         const newUserName = await readSyncByRl('Please Input new user name:')
-        const newUserPassword = genratePassword(64, true, true, true, true);
+        const newUserPassword = genratePassword(64, true, true, true, false);
 
         console.group("new user")
         // check database
@@ -107,8 +138,9 @@ async function createNewDatabaseAndUsername() {
         console.log(`MYSQL_USER=${newUserName}`);
         console.log(`MYSQL_PASSWORD=${newUserPassword}`);
         console.log(`MYSQL_DATABASE=${newDatabase}`);
-        console.groupEnd()
-        return resolve()    
+        console.log(`MYSQL_URL=mysql://${newUserName}:${newUserPassword}@${url.hostname}:${url.port}/${newDatabase}`);
+        console.groupEnd();
+        return resolve();   
     })
 
 }
@@ -126,10 +158,15 @@ async function main() {
     try {
         const databaseInfo = await showDatabaseInfo();
         console.log('table size:', databaseInfo.length);
-        await dropTable();  
-        await createTable();   
+        // await dropUser();
+        // await dropDatabase();
+        // await createNewDatabaseAndUsername();    
+        // await dropTable();  
+        // await createTable(); 
+        // await refreshPassword();  
+
     } catch (e) {
-        console.error(e);
+        console.error("[main error]", e);
     }
 
     connection.end();

@@ -46,6 +46,8 @@ function generatePassword(length, lower, upper, number, symbol) {
     return generatedPassword.slice(0, length);
 }
 
+// console.log(generatePassword(48, true, true, true, false))
+
 module.exports = {
     generatePassword,
 }
