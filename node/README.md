@@ -44,17 +44,19 @@ cp -r .env.example .env
     $ node mongo/app.js
     ```
 
+### Generate Util
+
++ password
++ 
+```shell
+$ cd node
+$ node util/generateUtil
+```
 
 ### Reference
 
 + [table](https://www.npmjs.com/package/table)
 + [lodash](https://lodash.com/docs)
-+ generate password
-    ```shell
-    cd node
-    vi util/generateUtil.js 
-    # open the Line-50 annotation
-    node util/generateUtil.js
-    ```
- + [why use `mongoose.Promise = global.Promise;`](https://stackoverflow.com/questions/51862570/mongoose-why-we-make-mongoose-promise-global-promise-when-setting-a-mongoo)   
++ [why use `mongoose.Promise = global.Promise;`](https://stackoverflow.com/questions/51862570/mongoose-why-we-make-mongoose-promise-global-promise-when-setting-a-mongoo)   
++ [Random phone number website](https://fakenumber.net/phone-number/singapore)
         

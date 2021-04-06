@@ -69,7 +69,7 @@ async function removeData() {
 async function main() {
     await connect();
     
-    await saveData();
+    // await saveData();
     // await updateData();
     // await removeData();
     await findData();
