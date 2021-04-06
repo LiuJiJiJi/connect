@@ -37,9 +37,9 @@ cp -r .env.example .env
         ║ 5     │      func       │ 4               │ 0               │ 0.00/MB         ║
         ╚═══════╧═════════════════╧═════════════════╧═════════════════╧═════════════════╝
     ```
-+ [mongodb](https://www.npmjs.com/package/mongodb)
++ [mongodb](https://www.npmjs.com/package/mongoose)
     ```shell
-    # update mysql conncet config on .env
+    # update mongodb conncet config on .env
     $ cd node
     $ node mongo/app.js
     ```
@@ -56,3 +56,5 @@ cp -r .env.example .env
     # open the Line-50 annotation
     node util/generateUtil.js
     ```
+ + [why use `mongoose.Promise = global.Promise;`](https://stackoverflow.com/questions/51862570/mongoose-why-we-make-mongoose-promise-global-promise-when-setting-a-mongoo)   
+        
