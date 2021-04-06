@@ -132,7 +132,7 @@ async function createNewDatabaseAndUsername() {
     return new Promise(async(resolve, reject) => {
         const newDatabase = await readSyncByRl('Please Input new database name:');
         const newUserName = await readSyncByRl('Please Input new user name:')
-        const newUserPassword = genratePassword(64, true, true, true, false);
+        const newUserPassword = genratePassword(99, true, true, true, false);
 
         console.group("new user")
         // check database

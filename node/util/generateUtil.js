@@ -24,7 +24,8 @@ function getRandomNumber() {
 
 }
 function getRandomSymbol() {
-    const symbols = '~!@#$%^&*()_+{}":?><;.,';
+    // const symbols = '~!@#$%^&*()_+{}":?><;.,';
+    const symbols = '_+><;.,[]|()-=';
     return symbols[Math.floor(Math.random() * symbols.length)];
 }
 
@@ -46,7 +47,7 @@ function generatePassword(length, lower, upper, number, symbol) {
     return generatedPassword.slice(0, length);
 }
 
-// console.log(generatePassword(48, true, true, true, false))
+console.log(generatePassword(99, true, true, true, false))
 
 module.exports = {
     generatePassword,

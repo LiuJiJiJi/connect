@@ -9,7 +9,9 @@ module.exports = {
     redis: {
         host: process.env.MONGODB_HOST,
         port: process.env.REDIS_PORT,
+        database: process.env.REDIS_DATABASE,
         password: process.env.REDIS_PASSWORD,
+        url: process.env.REDIS_URL,
     },
     mysql: {
         host: process.env.MYSQL_HOST,
