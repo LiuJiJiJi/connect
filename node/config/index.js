@@ -20,6 +20,9 @@ module.exports = {
         password: process.env.MYSQL_PASSWORD,
         database: process.env.MYSQL_DATABASE,
         url: process.env.MYSQL_URL,
+    },
+    mongo: {
+        url: process.env.MONGODB_URL
     }
 }
 

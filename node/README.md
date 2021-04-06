@@ -37,6 +37,12 @@ cp -r .env.example .env
         ║ 5     │      func       │ 4               │ 0               │ 0.00/MB         ║
         ╚═══════╧═════════════════╧═════════════════╧═════════════════╧═════════════════╝
     ```
++ [mongodb](https://www.npmjs.com/package/mongodb)
+    ```shell
+    # update mysql conncet config on .env
+    $ cd node
+    $ node mongo/app.js
+    ```
 
 
 ### Reference
