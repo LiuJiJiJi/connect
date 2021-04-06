@@ -9,7 +9,7 @@ module.exports = {
     redis: {
         host: process.env.MONGODB_HOST,
         port: process.env.REDIS_PORT,
-        database: process.env.REDIS_DATABASE,
+        database: process.env.REDIS_PORT,
         password: process.env.REDIS_PASSWORD,
         url: process.env.REDIS_URL,
     },

@@ -47,7 +47,7 @@ function generatePassword(length, lower, upper, number, symbol) {
     return generatedPassword.slice(0, length);
 }
 
-console.log(generatePassword(99, true, true, true, false))
+// console.log('[Generate password]:', generatePassword(99, true, true, true, false));
 
 module.exports = {
     generatePassword,

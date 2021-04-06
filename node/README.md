@@ -43,3 +43,10 @@ cp -r .env.example .env
 
 + [table](https://www.npmjs.com/package/table)
 + [lodash](https://lodash.com/docs)
++ generate password
+    ```shell
+    cd node
+    vi util/generateUtil.js 
+    # open the Line-50 annotation
+    node util/generateUtil.js
+    ```

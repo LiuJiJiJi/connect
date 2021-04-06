@@ -29,7 +29,7 @@ function main() {
     const client = createClientAndListen();
 
     /**
-     * hask
+     * hask operate
      */
     // client.hset("hash_key", "hashtest_1", "some value", (err, reply) => console.log(reply));
     // client.hset(["hash_key", "hashtest_2", "some other value"], (err, reply) => console.log(reply));
@@ -44,11 +44,15 @@ function main() {
     // client.quit();
 
     /**
-     * string
+     * string operate
      */
     client.set("string_key", "string_val", redis.print);
     client.get("string_key", redis.print);
     client.get("string_key", (err, reply) => console.log(reply));
+
+    /**
+     * TODO: refresh password
+     */
 
     client.quit();
 }
