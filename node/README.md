@@ -59,4 +59,5 @@ $ node util/generateUtil
 + [lodash](https://lodash.com/docs)
 + [why use `mongoose.Promise = global.Promise;`](https://stackoverflow.com/questions/51862570/mongoose-why-we-make-mongoose-promise-global-promise-when-setting-a-mongoo)   
 + [Random phone number website](https://fakenumber.net/phone-number/singapore)
++ [faker: Generate fake data](https://github.com/Marak/faker.js)
         

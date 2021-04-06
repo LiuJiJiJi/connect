@@ -119,6 +119,8 @@ function generatePhoneNumber(country) {
 
 module.exports = {
     generatePassword,
+    generateCNName,
+    generatePhoneNumber,
 }
 
 function main() {
@@ -129,4 +131,4 @@ function main() {
 }
 
 // run
-main();
+// main();

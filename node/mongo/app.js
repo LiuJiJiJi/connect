@@ -1,5 +1,7 @@
 const table = require('table').table;
+const faker = require('faker');
 const _ = require('lodash');
+const generateUtil = require('../util/generateUtil');
 const mongoose = require('mongoose');
 const Cat = mongoose.model('Cat', { name: String , sex: String, desc: String});
 
@@ -25,8 +27,7 @@ async function connect() {
  * insert data
  */
 async function saveData() {
-    const desc = _.sample(['I am an cat!', 'To be an cat!', 'Funny cat'])
-    const kitty = new Cat({ name: 'Zildjian' , sex: 'man', desc });
+    const kitty = new Cat({ name: faker.name.findName(), sex: _.sample(['man', 'femal', 'unknown']), desc: _.sample(['I am an cat!', 'To be an cat!', 'Funny cat']) });
     return new Promise((resolve, reject) => {
         kitty.save(function (err, doc) {
             if (err) return reject(err);
@@ -69,10 +70,15 @@ async function removeData() {
 async function main() {
     await connect();
     
+    /**
+     * crud
+     */
     // await saveData();
     // await updateData();
     // await removeData();
     await findData();
+
+    
 
     await mongoose.connection.close()
 }
