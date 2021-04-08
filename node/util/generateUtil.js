@@ -124,7 +124,7 @@ module.exports = {
 }
 
 function main() {
-    console.log('[Generate password]:', generatePassword(99, true, true, true, false));
+    console.log('[Generate password]:', generatePassword(16, true, true, true, false));
     console.log('[Generate username]:', generateCNName());
     console.log('[Generate phone number] china :', generatePhoneNumber());
     console.log('[Generate phone number] singapore :', generatePhoneNumber('sg'));

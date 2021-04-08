@@ -37,11 +37,12 @@ cp -r .env.example .env
         ║ 5     │      func       │ 4               │ 0               │ 0.00/MB         ║
         ╚═══════╧═════════════════╧═════════════════╧═════════════════╧═════════════════╝
     ```
-+ [mongodb](https://www.npmjs.com/package/mongoose)
++ [mongodb](http://mongodb.github.io/node-mongodb-native/3.6/api/) [mongoose](https://mongoosejs.com/docs/guide.html)
     ```shell
     # update mongodb conncet config on .env
     $ cd node
     $ node mongo/app.js
+    # mongoose
     ```
 
 ### Generate Util
