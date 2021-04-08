@@ -1,9 +1,11 @@
 const table = require('table').table;
+const genratePassword = require('../util/generateUtil').generatePassword;
 const faker = require('faker');
 const assert = require('assert');
 const _ = require('lodash');
 const generateUtil = require('../util/generateUtil');
 const mongoose = require('mongoose');
+const Admin = mongoose.mongo.Admin;
 const MUUID = require('uuid-mongodb');
 const url = require('../config').mongo.url;
 const createStream = require('table').createStream;
@@ -70,10 +72,32 @@ async function removeData() {
 }
 
 /**
- * mongodb show db info
+ * mongodb show database list
  */
-async function showDBInfo() {
+async function showDatabases() {
     const db = await mongoose.connection.db;
+    console.log('==========database list==========');
+    // database list
+    return new Promise((resolve, reject) => {
+        new Admin(db).listDatabases((err, result) => {
+            if (err) reject(err);
+            const databases = result.databases;  
+            result.databases.forEach((item) => {
+                item.sizeOnDisk = (item.sizeOnDisk/1024/1024).toFixed(2) + '/MB'
+            })
+            console.table(databases);
+            return resolve();
+        });
+    })
+}
+
+/**
+ * show collection list
+ */
+async function showCollections() {
+    const db = await mongoose.connection.db;
+    // current database collection 
+    console.log('==========current database collection list==========');
     const collections = await db.collections();
     const tableDatas = [];
     for (let i = 0; i < collections.length; i++) {
@@ -81,10 +105,12 @@ async function showDBInfo() {
         const collectionName = collection.collectionName;
         const stats = await db.command({collStats: collectionName});
         const size = (stats.storageSize/1024/1024).toFixed(2) + '/MB';
-        const count = await collection.count({});
+        const count = await collection.estimatedDocumentCount({});
         tableDatas.push({ dbName: collection.dbName, collectionName, size, count })
     }    
     console.table(tableDatas);
+
+
 }
 
 /**
@@ -114,6 +140,34 @@ async function showDBInfo() {
     console.log();
 }
 
+/**
+ * create database and user
+ */
+async function createDatabaseAndUser() {
+    const db = await mongoose.connection.db;
+    const databaseName = "colin";
+    const user = "colin_1";
+    const password = genratePassword(99, true, true, true, false)
+    await db.command({
+        createUser: user,
+        pwd: password,
+        roles: [
+            {"db":"admin", "role":"readWrite"}
+        ]
+    })
+}
+
+/**
+ * drop user
+ */
+ async function dropUser() {
+    const db = await mongoose.connection.db;
+    const user = "colin_1";
+    await db.command({
+        dropUser: user
+    })
+}
+
 async function main() {
     /*=====================mongoose start==============================*/
     await connect();
@@ -121,8 +175,11 @@ async function main() {
     /**
      * user/database manage
      */
-    await showDBInfo();
-    await showUsers();
+    await showDatabases();
+    await showCollections();
+    // await dropUser();
+    // await createDatabaseAndUser();
+    // await showUsers();
 
 
     /**
