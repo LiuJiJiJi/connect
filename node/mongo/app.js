@@ -122,7 +122,7 @@ async function main() {
      * user/database manage
      */
     await showDBInfo();
-    // await showUsers();
+    await showUsers();
 
 
     /**
