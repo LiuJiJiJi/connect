@@ -75,8 +75,23 @@ async function removeData() {
 async function showDBInfo() {
     const db = await mongoose.connection.db;
     const collections = await db.collections();
-    const collectionNames = collections.map(x => x.collectionName);
-    console.log('[ collections ]', collectionNames);
+    const tableDatas = [];
+    for (let i = 0; i < collections.length; i++) {
+        const collection = collections[i];
+        const collectionName = collection.collectionName;
+        const stats = await db.command({collStats: collectionName});
+        const size = (stats.storageSize/1024/1024).toFixed(2) + '/MB';
+        const count = await collection.count({});
+        tableDatas.push({ dbName: collection.dbName, collectionName, size, count })
+    }    
+    console.table(tableDatas);
+}
+
+/**
+ * mongodb show db info
+ */
+ async function showUsers() {
+    const db = await mongoose.connection.db;
     const systemUserCollection = db.collection('system.users');
     const users = await systemUserCollection.find({})
     let stream = createStream({
@@ -104,15 +119,11 @@ async function main() {
     await connect();
 
     /**
-     * user manage
+     * user/database manage
      */
     await showDBInfo();
-    // const users = await db.collection('system.users').find().pretty();
-    // console.log('users', users)
-    // await mongoose.connection.db.admin().command({ user: {}},(err, result) => {
-    //     if (err) throw err;
-    //     console.log('Result: ', result);
-    // })
+    // await showUsers();
+
 
     /**
      * crud

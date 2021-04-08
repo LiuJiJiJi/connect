@@ -1,11 +1,11 @@
 const mysql = require('mysql');
-const table = require('table').table;
 const createStream = require('table').createStream;
 const _ = require('lodash');
 const genratePassword = require('../util/generateUtil').generatePassword;
 const readSyncByRl = require('../util/fsUtil').readSyncByRl;
 const mysqlConfig = require('../config').mysql; 
 // User url connect
+if (!mysqlConfig.url) throw new Error("[env config errror]");
 const connection = mysql.createConnection(mysqlConfig.url);
 const url = new URL(mysqlConfig.url);
 const currentDatabase = url.pathname.replace('/', '');
@@ -164,32 +164,6 @@ async function createNewDatabaseAndUsername() {
     })
 
 }
-
-
-function tablePrintDemo() {
-    const data = [
-        ['0A', '0B', '0C'],
-        ['1A', '1B', '1C'],
-        ['2A', '2B', '2C']
-    ];
-    console.log(table(data));
-    let stream = createStream({
-        columnDefault: { width: 50 },
-        columnCount: 3,
-        columns: {
-            0: { width: 10, alignment: 'right' },
-            1: { alignment: 'center', },
-            2: { width: 10 }
-        }
-    });
-    let i = 0;
-    setInterval(() => {
-        let random = _.sampleSize('abcdefghijklmnopqrstuvwxyz', _.random(1, 30)).join('');
-        stream.write([i++, new Date(), random]);
-    }, 500);
-}
-
-
 
 
 async function main() {
