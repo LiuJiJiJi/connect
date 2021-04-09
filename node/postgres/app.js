@@ -15,15 +15,15 @@ const pool = new Pool({connectionString});
 async function showDatabaseInfo() {
 
     // [size](https://blog.csdn.net/u013992330/article/details/106807311/?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-0&spm=1001.2101.3001.4242)
-    console.log("==============Table List==================")
-    const queryTablesListResult = await pool.query('select schemaname, tablename, tableowner from pg_tables;');
-    const tables = queryTablesListResult.rows;
-    for (let i = 0; i < tables.length; i++) {
-        const table = tables[i];
-        const queryTableSizeResult = await pool.query(`select pg_size_pretty(pg_total_relation_size('${table.schemaname}.${table.tablename}')) as size;`);
-        table.tableSize = queryTableSizeResult.rows[0].size;
-    }
-    console.table(tables);
+    // console.log("==============Table List==================")
+    // const queryTablesListResult = await pool.query('select schemaname, tablename, tableowner from pg_tables;');
+    // const tables = queryTablesListResult.rows;
+    // for (let i = 0; i < tables.length; i++) {
+    //     const table = tables[i];
+    //     const queryTableSizeResult = await pool.query(`select pg_size_pretty(pg_total_relation_size('${table.schemaname}.${table.tablename}')) as size;`);
+    //     table.tableSize = queryTableSizeResult.rows[0].size;
+    // }
+    // console.table(tables);
 
     // console.log("==============Space List==================")
     // const querySpaceListResult = await pool.query('select spcname from pg_tablespace;');
@@ -93,9 +93,9 @@ async function dropDatabase() {
 async function main () {
     await showDatabaseInfo();
 
-    // await dropUser();
+    await dropUser();
     // await dropDatabase();
-    await createDatabaseAndUser();
+    // await createDatabaseAndUser();
 
     await pool.end();
 }
