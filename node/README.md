@@ -59,11 +59,13 @@ cp -r .env.example .env
     │    1    │ 'admin' │  'system.users'  │ '0.04/MB' │   2   │
     └─────────┴─────────┴──────────────────┴───────────┴───────┘
     ```
-+ [postgres](https://node-postgres.com/)
++ [postgres](https://node-postgres.com/) [postgres-docs-9.3](https://www.postgresql.org/docs/9.3/) [template0 template1](https://www.postgresql.org/docs/9.3/manage-ag-templatedbs.html)
     ```shell 
     $ cd node
     $ node postgres/app.js
     ```
+
++ [graphql](https://graphql.org/) [graphq、restful compare](https://zhuanlan.zhihu.com/p/342944526)
 
 ### Generate Util
 
@@ -81,4 +83,5 @@ $ node util/generateUtil
 + [why use `mongoose.Promise = global.Promise;`](https://stackoverflow.com/questions/51862570/mongoose-why-we-make-mongoose-promise-global-promise-when-setting-a-mongoo)   
 + [Random phone number website](https://fakenumber.net/phone-number/singapore)
 + [faker: Generate fake data](https://github.com/Marak/faker.js)
++ [mysql、postgres、sqlite  compare](https://zhuanlan.zhihu.com/p/347129470)
         

@@ -23,6 +23,9 @@ module.exports = {
     },
     mongo: {
         url: process.env.MONGODB_URL
+    },
+    postgres: {
+        url: process.env.POSTGRES_URL
     }
 }
 
