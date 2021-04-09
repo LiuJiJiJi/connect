@@ -187,7 +187,9 @@ async function useDatabaseAndCreateUser() {
     const connection = await mongoose.connection.useDb(databaseName);
 
     const db = await connection.db;
-    await db.createCollection('test');
+    if (!db.collection('test')) {
+        await db.createCollection('test');
+    }
     const password = genratePassword(99, true, true, true, false)
     await db.command({
         createUser: user,
@@ -202,6 +204,38 @@ async function useDatabaseAndCreateUser() {
         console.log("===========");
         console.log("===========");
         console.log(`MONGODB_URL=mongodb://${user}:${password}@${url.hostname}:${url.port}/${databaseName}`);
+        console.log("===========");
+        console.log("===========");
+        console.log("===========");
+    }, 1000)
+
+}
+
+/**
+ * refresh user password
+ */
+ async function refreshUserPassword() {
+    const user = await readSyncByRl('[Refresh User Password]Please Input user name:');
+    const databaseName = await readSyncByRl('[Refresh User Password]Please Input user\'s database name:');
+    const connection = await mongoose.connection.useDb(databaseName);
+
+    const db = await connection.db;
+    if (!db.collection('test')) {
+        await db.createCollection('test');
+    }
+    const password = genratePassword(99, true, true, true, false)
+    await db.command({
+        updateUser: user,
+        pwd: password
+    });
+    setTimeout(() => {
+        console.log("===========");
+        console.log("===========");
+        console.log("===========");
+        console.log(`MONGODB_URL=mongodb://${user}:${password}@${url.hostname}:${url.port}/${databaseName}`);
+        console.log("===========");
+        console.log("===========");
+        console.log("===========");
     }, 1000)
 
 }
@@ -222,7 +256,7 @@ async function dropUser() {
 /**
  * drop database
  */
- async function dropDatabase() {
+async function dropDatabase() {
     console.log("==============[Drop Database is very dangrous] Please use with caution===================")
     const databaseName = await readSyncByRl('[Drop User]Please Input database name:');
     const connection = await mongoose.connection.useDb(databaseName);
@@ -236,14 +270,15 @@ async function main() {
     /**
      * user/database manage
      */
-    // await showUsers();
+    await showUsers();
     await showDatabases();
     // await dropUser();
     // await dropDatabase();
     // await useDatabaseAndCreateUser();
-    await showCollections();
+    // await refreshUserPassword();
+    // await showCollections();
     await showDatabases();
-    // await showUsers();
+    await showUsers();
 
 
     /**
