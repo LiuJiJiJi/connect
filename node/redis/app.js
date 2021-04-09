@@ -1,6 +1,6 @@
 const redis = require('redis');
 const redisConfig = require('../config').redis;
-
+const client = createClientAndListen();
 
 /**
  * Use params structure redis client: const client = redis.createClient(redisConfig.port, redisConfig.host, {auth_pass: redisConfig.password, db: redisConfig.database});
@@ -23,10 +23,25 @@ function createClientAndListen() {
     return client;
 }
 
+function showDBInfo() {
+    client.info((err, reply) => {
+        if (err) throw err;
+        const results = reply.split('\r\n');
+        const tableDatas = [];
+        results.forEach(item => {
+            if(item.indexOf(':') > 0) {
+                const itemDatas = item.split(':');
+                tableDatas.push({ name: itemDatas[0], value: itemDatas[1] });
+            }
+        });
+        console.table(tableDatas);
+    });
+}
 
 
-function main() {
-    const client = createClientAndListen();
+async function main() {
+
+    showDBInfo();
 
     /**
      * hask operate
