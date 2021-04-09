@@ -3,7 +3,6 @@ const genratePassword = require('../util/generateUtil').generatePassword;
 const faker = require('faker');
 const assert = require('assert');
 const _ = require('lodash');
-const generateUtil = require('../util/generateUtil');
 const readSyncByRl = require('../util/fsUtil').readSyncByRl;
 const mongoose = require('mongoose');
 const Admin = mongoose.mongo.Admin;
@@ -223,7 +222,7 @@ async function useDatabaseAndCreateUser() {
     if (!db.collection('test')) {
         await db.createCollection('test');
     }
-    const password = genratePassword(99, true, true, true, false)
+    const password = genratePassword(99, true, true, true, false);
     await db.command({
         updateUser: user,
         pwd: password
