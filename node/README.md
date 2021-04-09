@@ -59,6 +59,11 @@ cp -r .env.example .env
     │    1    │ 'admin' │  'system.users'  │ '0.04/MB' │   2   │
     └─────────┴─────────┴──────────────────┴───────────┴───────┘
     ```
++ [postgres](https://node-postgres.com/)
+    ```shell 
+    $ cd node
+    $ node postgres/app.js
+    ```
 
 ### Generate Util
 
