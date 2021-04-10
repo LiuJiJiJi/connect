@@ -15,15 +15,15 @@ const pool = new Pool({connectionString});
 async function showDatabaseInfo() {
 
     // [size](https://blog.csdn.net/u013992330/article/details/106807311/?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-0&spm=1001.2101.3001.4242)
-    // console.log("==============Table List==================")
-    // const queryTablesListResult = await pool.query('select schemaname, tablename, tableowner from pg_tables;');
-    // const tables = queryTablesListResult.rows;
-    // for (let i = 0; i < tables.length; i++) {
-    //     const table = tables[i];
-    //     const queryTableSizeResult = await pool.query(`select pg_size_pretty(pg_total_relation_size('${table.schemaname}.${table.tablename}')) as size;`);
-    //     table.tableSize = queryTableSizeResult.rows[0].size;
-    // }
-    // console.table(tables);
+    console.log("==============Table List==================")
+    const queryTablesListResult = await pool.query('select schemaname, tablename, tableowner from pg_tables;');
+    const tables = queryTablesListResult.rows;
+    for (let i = 0; i < tables.length; i++) {
+        const table = tables[i];
+        const queryTableSizeResult = await pool.query(`select pg_size_pretty(pg_total_relation_size('${table.schemaname}.${table.tablename}')) as size;`);
+        table.tableSize = queryTableSizeResult.rows[0].size;
+    }
+    console.table(tables);
 
     // console.log("==============Space List==================")
     // const querySpaceListResult = await pool.query('select spcname from pg_tablespace;');
@@ -35,32 +35,45 @@ async function showDatabaseInfo() {
     // }
     // console.table(spaces);
 
-    console.log("==============Database List==================")
-    const queryDatabaseListResult = await pool.query('select pg_database.datname, pg_size_pretty(pg_database_size(pg_database.datname)) as size from pg_database;');
-    const databases = queryDatabaseListResult.rows;
-    console.table(databases);
+    console.log("==============Schema List==================")
+    const querySchemaListResult = await pool.query(`select * from pg_namespace;`);
+    const schemas = querySchemaListResult.rows;
+    console.table(schemas);
+
+    // console.log("==============Database List==================")
+    // const queryDatabaseListResult = await pool.query('select db.datname, db.datacl, pg_size_pretty(pg_database_size(db.datname)) as size, pg_catalog.pg_get_userbyid(db.datdba) as owner from pg_database db;');
+    // const databases = queryDatabaseListResult.rows;
+    // console.table(databases);
 
     console.log("==============User List==================")
-    const queryUserListResult = await pool.query(`SELECT u.usename AS "User name", u.usesysid AS "User ID", CASE WHEN u.usesuper AND u.usecreatedb THEN CAST('superuser, create database' AS pg_catalog.text)
-                                                        WHEN u.usesuper THEN CAST('superuser' AS pg_catalog.text)
-                                                        WHEN u.usecreatedb THEN CAST('create database' AS pg_catalog.text) ELSE CAST('' AS pg_catalog.text) END AS "Attributes"
-                                                    FROM pg_catalog.pg_user u ORDER BY 1;`);
+    const queryUserListResult = await pool.query(`select usename from pg_user;`);
     const users = queryUserListResult.rows;
     console.table(users);
 
+}
+
+async function revokePublicPrivilege() {
+    await pool.query(`REVOKE CONNECT ON DATABASE postgres FROM PUBLIC;`);
+    await pool.query(`revoke all on database postgres from PUBLIC;`);
+    await pool.query(`revoke select on all tables in schema public from PUBLIC;`);
 }
 
 /**
  * create database & user
  */
 async function createDatabaseAndUser() {
+
+    const databaseName = await readSyncByRl('[Create Database]Please Input database name:');
+    await pool.query(`CREATE database ${databaseName};`);
+    await pool.query(`REVOKE CONNECT ON DATABASE ${databaseName} FROM PUBLIC;`);
+    await pool.query(`revoke all on database ${databaseName} from PUBLIC;`);
+
     const userName = await readSyncByRl('[Create User]Please Input user name:');
     const password = genratePassword(99, true, true, true, false);
     await pool.query(`CREATE USER ${userName} WITH PASSWORD '${password}';`);
 
-    const databaseName = await readSyncByRl('[Create Database]Please Input database name:');
-    await pool.query(`CREATE database ${databaseName};`);
-    await pool.query(`GRANT ALL PRIVILEGES ON DATABASE ${databaseName} TO ${userName};`);
+    await pool.query(`ALTER database ${databaseName} OWNER TO ${userName};`);
+    await pool.query(`GRANT CONNECT ON DATABASE ${databaseName} TO ${userName};`);
 
     console.log("======>");
     console.log("==============>");
@@ -82,7 +95,7 @@ async function dropUser() {
 
 async function dropDatabase() {
     console.log("==============Drop Database is very dangrous")
-    const databaseName = await readSyncByRl('[Creat Database]Please Input database name:');
+    const databaseName = await readSyncByRl('[Drop Database]Please Input database name:');
     // close the connect about this database
     await pool.query(`SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE datname='${databaseName}' AND pid<>pg_backend_pid();`);
     // drop database
@@ -90,12 +103,46 @@ async function dropDatabase() {
     console.log("==============Drop Database success=========");
 }
 
-async function main () {
-    await showDatabaseInfo();
+async function refreshPassword() {
+    console.log("==============Refresh User password==================")
+    const userName = await readSyncByRl('[Refresh User password]Please Input user name:');
+    const password = genratePassword(99, true, true, true, false);
+    await pool.query(`alter user ${userName} with password '${password}';`);
+    console.log("New Password======>");
+    console.log("========================>");
+    console.log("=============================>");
+    console.log(`${userName}:${password}`);
+    console.log("=============================>");
+    console.log("=======================>");
+    console.log("==================>");
+}
 
-    await dropUser();
-    // await dropDatabase();
-    // await createDatabaseAndUser();
+
+async function createTable() {
+    await pool.query(`CREATE TABLE COMPANY(
+        ID INT PRIMARY KEY     NOT NULL,
+        NAME           TEXT    NOT NULL,
+        AGE            INT     NOT NULL,
+        ADDRESS        CHAR(50),
+        SALARY         REAL
+     );`);
+     pool.
+}
+
+async function main () {
+    try {
+        await showDatabaseInfo();
+        // await revokePublicPrivilege();
+    
+        // await dropUser();
+        // await dropDatabase();
+        // await createDatabaseAndUser();
+        // await refreshPassword();
+        // await createTable();
+    } catch (e) {
+        console.error("[main error]", e)
+    }
+
 
     await pool.end();
 }
