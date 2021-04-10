@@ -126,7 +126,6 @@ async function createTable() {
         ADDRESS        CHAR(50),
         SALARY         REAL
      );`);
-     pool.
 }
 
 async function main () {
