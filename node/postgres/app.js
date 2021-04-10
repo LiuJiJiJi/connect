@@ -119,13 +119,20 @@ async function refreshPassword() {
 
 
 async function createTable() {
-    await pool.query(`CREATE TABLE COMPANY(
-        ID INT PRIMARY KEY     NOT NULL,
-        NAME           TEXT    NOT NULL,
-        AGE            INT     NOT NULL,
-        ADDRESS        CHAR(50),
-        SALARY         REAL
-     );`);
+    const schemaName = "test";
+    const tableName = "company";
+    await pool.query(`DROP TABLE if exists ${schemaName}.${tableName};`);
+    await pool.query(`drop schema if exists ${schemaName};`);
+    await pool.query(`create schema ${schemaName};`);
+    await pool.query(`CREATE TABLE ${schemaName}.${tableName} (
+        id integer PRIMARY KEY,
+        name text NOT NULL,
+        age integer NOT NULL,
+        address character(50),
+        salary real
+    );`);
+    const queryTableStructureResult = await pool.query(`SELECT ordinal_position, table_schema, table_name, column_name, data_type, character_maximum_length, character_octet_length  FROM information_schema.columns WHERE table_name ='${tableName}';`);
+    console.table(queryTableStructureResult.rows);    
 }
 
 async function main () {
@@ -137,7 +144,7 @@ async function main () {
         // await dropDatabase();
         // await createDatabaseAndUser();
         // await refreshPassword();
-        // await createTable();
+        await createTable();
     } catch (e) {
         console.error("[main error]", e)
     }
