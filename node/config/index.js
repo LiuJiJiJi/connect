@@ -26,6 +26,9 @@ module.exports = {
     },
     postgres: {
         url: process.env.POSTGRES_URL
+    },
+    elasticsearch: {
+        url: process.env.ELASTICSEARCH_URL
     }
 }
 

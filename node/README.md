@@ -67,6 +67,12 @@ cp -r .env.example .env
 
 + [graphql](https://graphql.org/) [graphq、restful compare](https://zhuanlan.zhihu.com/p/342944526)
 
+
++ [elastic doc](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html) [elastic npm](https://www.npmjs.com/package/@elastic/elasticsearch)
+    ```shell 
+    $ cd node
+    $ node elasticsearch/app.js
+    ```
 ### Generate Util
 
 + password
