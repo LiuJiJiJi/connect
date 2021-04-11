@@ -2,6 +2,8 @@ const {
     Pool,
     Client
 } = require('pg')
+const faker = require('faker');
+const _ = require('lodash');
 const genratePassword = require('../util/generateUtil').generatePassword;
 const readSyncByRl = require('../util/fsUtil').readSyncByRl;
 const url = new URL(require('../config').postgres.url);
@@ -125,7 +127,7 @@ async function createTable() {
     await pool.query(`drop schema if exists ${schemaName};`);
     await pool.query(`create schema ${schemaName};`);
     await pool.query(`CREATE TABLE ${schemaName}.${tableName} (
-        id integer PRIMARY KEY,
+        id serial PRIMARY KEY,
         name text NOT NULL,
         age integer NOT NULL,
         address character(50),
@@ -133,6 +135,23 @@ async function createTable() {
     );`);
     const queryTableStructureResult = await pool.query(`SELECT ordinal_position, table_schema, table_name, column_name, data_type, character_maximum_length, character_octet_length  FROM information_schema.columns WHERE table_name ='${tableName}';`);
     console.table(queryTableStructureResult.rows);    
+}
+
+async function insertData() {
+    const schemaName = "test";
+    const tableName = "company";
+    const name = faker.name.findName();
+    const age = _.sample([23, 24, 25, 26, 27, 28]);
+    const address = _.sample(['Singapore Chinatown', 'Australia Chinatown']);
+    const salary = _.sample([20000, 25000, 30000]);
+    await pool.query(`INSERT INTO ${schemaName}.${tableName} (name, age, address, salary) VALUES ($1, $2, $3, $4)`, [name, age, address, salary]);
+}
+
+async function selectData() {
+    const schemaName = "test";
+    const tableName = "company";
+    const queryListResut = await pool.query(`select * from ${schemaName}.${tableName};`);
+    console.table(queryListResut.rows);
 }
 
 async function main () {
@@ -144,7 +163,14 @@ async function main () {
         // await dropDatabase();
         // await createDatabaseAndUser();
         // await refreshPassword();
-        await createTable();
+        
+        // await createTable();
+        /**
+         * crud
+         */
+        await insertData();
+        await selectData();
+
     } catch (e) {
         console.error("[main error]", e)
     }
