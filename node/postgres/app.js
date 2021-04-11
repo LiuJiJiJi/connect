@@ -18,7 +18,7 @@ async function showDatabaseInfo() {
 
     // [size](https://blog.csdn.net/u013992330/article/details/106807311/?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-0&spm=1001.2101.3001.4242)
     console.log("==============Table List==================")
-    const queryTablesListResult = await pool.query('select schemaname, tablename, tableowner from pg_tables;');
+    const queryTablesListResult = await pool.query(`select schemaname, tablename, tableowner from pg_tables where schemaname not in ('pg_catalog', 'information_schema');`);
     const tables = queryTablesListResult.rows;
     for (let i = 0; i < tables.length; i++) {
         const table = tables[i];
@@ -37,10 +37,10 @@ async function showDatabaseInfo() {
     // }
     // console.table(spaces);
 
-    console.log("==============Schema List==================")
-    const querySchemaListResult = await pool.query(`select * from pg_namespace;`);
-    const schemas = querySchemaListResult.rows;
-    console.table(schemas);
+    // console.log("==============Schema List==================")
+    // const querySchemaListResult = await pool.query(`select * from pg_namespace;`);
+    // const schemas = querySchemaListResult.rows;
+    // console.table(schemas);
 
     // console.log("==============Database List==================")
     // const queryDatabaseListResult = await pool.query('select db.datname, db.datacl, pg_size_pretty(pg_database_size(db.datname)) as size, pg_catalog.pg_get_userbyid(db.datdba) as owner from pg_database db;');
@@ -121,11 +121,12 @@ async function refreshPassword() {
 
 
 async function createTable() {
+    const userName = "colin";
     const schemaName = "test";
     const tableName = "company";
     await pool.query(`DROP TABLE if exists ${schemaName}.${tableName};`);
     await pool.query(`drop schema if exists ${schemaName};`);
-    await pool.query(`create schema ${schemaName};`);
+    await pool.query(`create schema ${schemaName} authorization ${userName};`);
     await pool.query(`CREATE TABLE ${schemaName}.${tableName} (
         id serial PRIMARY KEY,
         name text NOT NULL,
@@ -180,9 +181,11 @@ async function main () {
         /**
          * crud
          */
-        // await insertData();
+        // for (let i = 0; i < 10; i++) {
+        //     await insertData();
+        // }
         // await updateData();
-        await deleteData();
+        // await deleteData();
         await selectData();
 
     } catch (e) {
