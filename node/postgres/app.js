@@ -143,7 +143,7 @@ async function insertData() {
     const name = faker.name.findName();
     const age = _.sample([23, 24, 25, 26, 27, 28]);
     const address = _.sample(['Singapore Chinatown', 'Australia Chinatown']);
-    const salary = _.sample([20000, 25000, 30000]);
+    const salary = _.sample([13000, 15000, 20000, 25000, 30000]);
     await pool.query(`INSERT INTO ${schemaName}.${tableName} (name, age, address, salary) VALUES ($1, $2, $3, $4)`, [name, age, address, salary]);
 }
 
@@ -152,6 +152,18 @@ async function selectData() {
     const tableName = "company";
     const queryListResut = await pool.query(`select * from ${schemaName}.${tableName};`);
     console.table(queryListResut.rows);
+}
+
+async function updateData() {
+    const schemaName = "test";
+    const tableName = "company";
+    await pool.query(`update ${schemaName}.${tableName} set salary = salary + 5000 where age >= 24;`);
+}
+
+async function deleteData() {
+    const schemaName = "test";
+    const tableName = "company";
+    await pool.query(`DELETE FROM ${schemaName}.${tableName} WHERE salary < 18000;`);
 }
 
 async function main () {
@@ -168,7 +180,9 @@ async function main () {
         /**
          * crud
          */
-        await insertData();
+        // await insertData();
+        // await updateData();
+        await deleteData();
         await selectData();
 
     } catch (e) {
