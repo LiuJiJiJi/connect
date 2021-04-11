@@ -6,7 +6,7 @@
 + mongodb
 + postgres
 + elasticsearch
-+ kafuka
++ kafka
 
 ### [node](./node)
 ### [java](./java)
