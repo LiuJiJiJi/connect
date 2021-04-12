@@ -33,32 +33,37 @@ async function query(sql) {
  * Show database info
  */
 async function showDatabaseInfo() {
-    const queryTablseSql = `select table_name from information_schema.tables where table_schema='${currentDatabase}';`;
-    const tables = await query(queryTablseSql);
-    let stream = createStream({
-        columnDefault: { width: 50 },
-        columnCount: 5,
-        columns: {
-            0: { width: 5, alignment: 'left' },
-            1: { width: 15, alignment: 'center'  },
-            2: { width: 15, alignment: 'left'  },
-            3: { width: 15, alignment: 'left'  },
-            4: { width: 15, alignment: 'left'  },
-        }
-    });
-    stream.write([null, 'table name', 'columns count', 'row count', 'size']);
-    for (let i = 0; i < tables.length; i++) {
-        const table_name = tables[i].table_name;
-        const queryTableRowCountSql = `select count(1) count from ${table_name};`;
-        const count = await query(queryTableRowCountSql).then(results=> results[0].count);
-        const queryTableSizeSql = `select concat(round(sum(data_length/1024/1024),2),'/MB') as size from information_schema.tables where table_schema='${currentDatabase}' and table_name='${table_name}';`
-        const size = await query(queryTableSizeSql).then((results) => results[0].size);
-        const queryTableColumnsCountSql = `select count(1) as count from information_schema.columns where table_schema='${currentDatabase}' and table_name='${table_name}';`;
-        const columnsCount = await query(queryTableColumnsCountSql).then((results) => results[0].count);
-        stream.write([i+1, table_name, columnsCount, count, size]);
-    }
-    console.log();
-    return tables;
+
+
+
+    // const queryTablseSql = `select table_name from information_schema.tables where table_schema='${currentDatabase}';`;
+    // const tables = await query(queryTablseSql);
+    // let stream = createStream({
+    //     columnDefault: { width: 50 },
+    //     columnCount: 5,
+    //     columns: {
+    //         0: { width: 5, alignment: 'left' },
+    //         1: { width: 15, alignment: 'center'  },
+    //         2: { width: 15, alignment: 'left'  },
+    //         3: { width: 15, alignment: 'left'  },
+    //         4: { width: 15, alignment: 'left'  },
+    //     }
+    // });
+    // stream.write([null, 'table name', 'columns count', 'row count', 'size']);
+    // for (let i = 0; i < tables.length; i++) {
+    //     const table_name = tables[i].table_name;
+    //     const queryTableRowCountSql = `select count(1) count from ${table_name};`;
+    //     const count = await query(queryTableRowCountSql).then(results=> results[0].count);
+    //     const queryTableSizeSql = `select concat(round(sum(data_length/1024/1024),2),'/MB') as size from information_schema.tables where table_schema='${currentDatabase}' and table_name='${table_name}';`
+    //     const size = await query(queryTableSizeSql).then((results) => results[0].size);
+    //     const queryTableColumnsCountSql = `select count(1) as count from information_schema.columns where table_schema='${currentDatabase}' and table_name='${table_name}';`;
+    //     const columnsCount = await query(queryTableColumnsCountSql).then((results) => results[0].count);
+    //     stream.write([i+1, table_name, columnsCount, count, size]);
+    // }
+    // console.log();
+
+    const queryDatabaseSql = await query(`SELECT TABLE_SCHEMA, concat(round(((sum(DATA_LENGTH)+sum(INDEX_LENGTH))/1024/1024),2), '/MB') as size FROM information_schema.TABLES group by TABLE_SCHEMA;`);
+    console.table(queryDatabaseSql);
 }
 
 /**
@@ -172,10 +177,10 @@ async function main() {
     });
 
     try {
-        const databaseInfo = await showDatabaseInfo();
+        await showDatabaseInfo();
         // await dropUser();
         // await dropDatabase();
-        // await createNewDatabaseAndUsername();    
+        await createNewDatabaseAndUsername();    
         // await dropTable();  
         // await createTable(); 
         // await refreshPassword();  
