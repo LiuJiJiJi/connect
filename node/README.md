@@ -73,6 +73,12 @@ cp -r .env.example .env
     $ cd node
     $ node elasticsearch/app.js
     ```
+
++ [firestore database](https://firebase.google.com/docs/admin/setup?authuser=0)
+    ```shell 
+    $ cd node
+    $ node firebase/app.js
+    ```    
 ### Generate Util
 
 + password
