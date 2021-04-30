@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {},
   "dependencies": {
+    "@directus/sdk": "^9.0.0-rc.61",
     "@elastic/elasticsearch": "7.5",
     "body-parser": "~1.19.0",
     "debug": "~4.3.1",

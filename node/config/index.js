@@ -29,6 +29,11 @@ module.exports = {
     },
     elasticsearch: {
         url: process.env.ELASTICSEARCH_URL
+    },
+    directus: {
+        url: process.env.DIRECTUS_URL,
+        email: process.env.DIRECTUS_EMAIL,
+        password: process.env.DIRECTUS_PASSWORD,
     }
 }
 

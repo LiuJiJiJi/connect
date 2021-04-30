@@ -270,14 +270,14 @@ async function main() {
      * user/database manage
      */
     await showUsers();
-    await showDatabases();
+    // await showDatabases();
     // await dropUser();
     // await dropDatabase();
-    await useDatabaseAndCreateUser();
+    // await useDatabaseAndCreateUser();
     // await refreshUserPassword();
     // await showCollections();
-    await showDatabases();
-    await showUsers();
+    // await showDatabases();
+    // await showUsers();
 
 
     /**
