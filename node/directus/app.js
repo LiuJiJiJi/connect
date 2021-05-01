@@ -18,9 +18,14 @@ async function query() {
     });
 }
 
+async function queryCustomApi() {
+    const articles = await directus.items('my-endpoint').readMany();
+}
+
 async function main() {
     await login();
-    await query();
+    // await query();
+    await queryCustomApi();
 }
 
 main();

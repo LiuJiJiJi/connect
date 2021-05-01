@@ -106,7 +106,8 @@ async function showDatabaseInfo() {
     console.error("=========================Refresh Password")
     const user = await readSyncByRl(`[Refresh Password]Please Input user name:`);
     const newPassword = genratePassword(64, true, true, true, false);
-    const sql = `update user set authentication_string=password('${newPassword}') where user='${user}';`
+    // mysql 8 --> ALTER USER 'user'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';  
+    const sql = `update user set authentication_string=password('${newPassword}') where User='${user}';`
     console.group('Refresh Password');
     console.log(`MYSQL_USER=${user}`);
     console.log(`MYSQL_PASSWORD=${newPassword}`);
