@@ -107,6 +107,7 @@ async function showDatabaseInfo() {
     const user = await readSyncByRl(`[Refresh Password]Please Input user name:`);
     const newPassword = genratePassword(64, true, true, true, false);
     // mysql 8 --> ALTER USER 'user'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';  
+    // const sql = `ALTER USER '${user}'@'%' IDENTIFIED WITH mysql_native_password BY '${newPassword}';`
     const sql = `update user set authentication_string=password('${newPassword}') where User='${user}';`
     console.group('Refresh Password');
     console.log(`MYSQL_USER=${user}`);
@@ -156,7 +157,7 @@ async function createNewDatabaseAndUsername() {
 
         const createUserSql = `CREATE USER '${newUserName}'@'%' IDENTIFIED BY '${newUserPassword}';`
         const createDatabaseSql = `create schema ${newDatabase} default character set utf8mb4 collate utf8mb4_general_ci;`
-        const grantDatabaseAuthToUser = `grant all on ${newDatabase}.* to '${newUserName}'@'%';`;
+        const grantDatabaseAuthToUser = `grant all on \`${newDatabase}\`.* to '${newUserName}'@'%';`;
         await query(createUserSql);
         await query(createDatabaseSql);
         await query(grantDatabaseAuthToUser);
