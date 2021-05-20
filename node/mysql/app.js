@@ -64,6 +64,10 @@ async function showDatabaseInfo() {
 
     const queryDatabaseSql = await query(`SELECT TABLE_SCHEMA, concat(round(((sum(DATA_LENGTH)+sum(INDEX_LENGTH))/1024/1024),2), '/MB') as size FROM information_schema.TABLES group by TABLE_SCHEMA;`);
     console.table(queryDatabaseSql);
+
+    // const queryUsersSql = await query(`select user,host from mysql.user;`);
+    // console.table(queryUsersSql);
+    
 }
 
 /**
@@ -182,7 +186,7 @@ async function main() {
         await showDatabaseInfo();
         // await dropUser();
         // await dropDatabase();
-        await createNewDatabaseAndUsername();    
+        // await createNewDatabaseAndUsername();    
         // await dropTable();  
         // await createTable(); 
         // await refreshPassword();  

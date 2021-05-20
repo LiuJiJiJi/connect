@@ -189,7 +189,8 @@ async function useDatabaseAndCreateUser() {
     if (!db.collection('test')) {
         await db.createCollection('test');
     }
-    const password = genratePassword(99, true, true, true, false)
+    // const password = genratePassword(99, true, true, true, false)
+    const password = 'vW7bD8oE8zO2aP7uA3lK9qR3kQ0rX5xY7xL4eX1zY5sZ2kX9fC1aL5bS9eR2rU8lO9dL2yU1zO8yT2mH5pW9pC2tI9tG8pP8gE9'
     await db.command({
         createUser: user,
         pwd: password,
@@ -273,7 +274,7 @@ async function main() {
     // await showDatabases();
     // await dropUser();
     // await dropDatabase();
-    await useDatabaseAndCreateUser();
+    // await useDatabaseAndCreateUser();
     // await refreshUserPassword();
     // await showCollections();
     // await showDatabases();
