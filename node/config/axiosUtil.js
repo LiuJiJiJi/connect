@@ -30,6 +30,7 @@ function call(methed, url, data = {}, headers = {'Content-Type':'application/jso
             params: methed === 'get' || methed === 'delete'  ? data :'',
             data: methed !== 'get' && methed !== 'delete'?  data :'',
             headers: headers,
+            headers: { ...headers, 'Content-Type':'application/json'},
         })
         .then(response => {
             /**
@@ -53,14 +54,14 @@ function call(methed, url, data = {}, headers = {'Content-Type':'application/jso
     })
 }
 
-async function callForm(methed, url, data = {}, headers = {'Content-Type':'application/json'}) {
+async function callForm(methed, url, data = {}, headers = {'Content-Type': 'application/x-www-form-urlencoded;'}) {
     return new Promise((resolve, reject) => {
         axiosInstance({
                 method: methed || 'post',
                 url:url,
                 params: methed === 'get' || methed === 'delete'  ? data :'',
                 data: methed !== 'get' && methed !== 'delete'?  data :'',
-                headers: headers,
+                headers: { ...headers, 'Content-Type': 'application/x-www-form-urlencoded;'},
                 transformRequest: [
                     function (data) {
                         let ret = ''
@@ -93,8 +94,9 @@ function deleteFiled(data, filed) {
 
 module.exports = {
     // ------------------------------lms-------------------------------------
-    lmsLogin: (data, headers) => callForm('post', '/user_api/v1/account/login_session/', data, headers),
-    lmsMe: (data, headers) => call('get', '/api/user/v1/me', data, headers),
-    lmsCourseDiscovery: (data, headers) => callForm('post', '/search/course_discovery/', data, headers),
+    lmsGetCsrftoken: (data, headers) => call('get', '/courses', data, headers),
+    lmsUserLogin: (data, headers) => callForm('post', '/user_api/v1/account/login_session/', data, headers),
+    lmsGetUserInfo: (data, headers) => call('get', '/api/user/v1/me', data, headers),
+    lmsGetCourse: (data, headers) => callForm('post', '/search/course_discovery/', data, headers),
 
 };

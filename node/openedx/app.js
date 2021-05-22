@@ -1,10 +1,9 @@
 const lmsConfig = require("../config").openedx.lms;
 const discoveryConfig = require("../config").openedx.discovery;
 const axiosUtil = require("../config/axiosUtil");
-const headersTemplate = {'Content-Type':'application/x-www-form-urlencoded;', 'X-CSRFToken': '0pantN81PK3emjfrHcV3Fd80H152xWpjZ0kSb35fG8f2R03m2h2eqWmZoKGYSfFM', 'Cookie': 'csrftoken=0pantN81PK3emjfrHcV3Fd80H152xWpjZ0kSb35fG8f2R03m2h2eqWmZoKGYSfFM;'}
+let csrftoken = null
 let lmsHeaders = null
-let lmsCookies = null;
-// const FormData = require('form-data');
+let lmsCookies = null
 
 function buildCookieMap (cookies) {
   const cookieMap = {}
@@ -19,14 +18,24 @@ function buildCookieMap (cookies) {
   return cookieMap
 }
 
-async function lmsLogin() {
+async function lmsGetCsrftoken() {
+  const reponse = await axiosUtil.lmsGetCsrftoken({}, {})
+  const reponseCookieMap = buildCookieMap(reponse.headers['set-cookie'])
+  csrftoken = reponseCookieMap.csrftoken
+  console.log("[ lmsMe reponse data ]", reponse.status);
+}
+
+async function lmsUserLogin() {
   const data = {
     email: lmsConfig.email,
     password: lmsConfig.password,
   }
-  const reponse = await axiosUtil.lmsLogin(data, headersTemplate)
+  const headers = {
+    'X-CSRFToken': csrftoken,
+    'Cookie': `csrftoken=${csrftoken};`,
+  } 
+  const reponse = await axiosUtil.lmsUserLogin(data, headers)
   const reponseCookieMap = buildCookieMap(reponse.headers['set-cookie'])
-  // lmsCookies = `edxloggedin=${reponseCookieMap["edxloggedin"]}; edx-jwt-cookie-signature=${reponseCookieMap["edx-jwt-cookie-signature"]}; csrftoken=${reponseCookieMap["csrftoken"]}; sessionid=${reponseCookieMap["sessionid"]};`;
   lmsCookies = `csrftoken=${reponseCookieMap["csrftoken"]}; sessionid=${reponseCookieMap["sessionid"]};`;
   lmsHeaders = { ...headersTemplate, Cookie: lmsCookies, 'X-CSRFToken': reponseCookieMap['csrftoken'] }
   // console.log("[ lmsLogin lmsCookie ]", lmsCookie);
@@ -34,15 +43,15 @@ async function lmsLogin() {
 }
 
 
-async function lmsMe() {
-  const reponse = await axiosUtil.lmsMe({}, lmsHeaders)
+async function lmsGetUserInfo() {
+  const reponse = await axiosUtil.lmsGetUserInfo({}, lmsHeaders)
   console.log("[ lmsMe reponse data ]", reponse.data);
 }
 
 
-async function lmsCourseDiscovery() {
+async function lmsGetCourse() {
   console.log(lmsHeaders)
-  const reponse = await axiosUtil.lmsCourseDiscovery({
+  const reponse = await axiosUtil.lmsGetCourse({
     page_size: 20,
     page_index: 0
   }, lmsHeaders)
@@ -52,9 +61,10 @@ async function lmsCourseDiscovery() {
 
 async function main() {
   try {
-    await lmsLogin();
-    await lmsMe();
-    await lmsCourseDiscovery();
+    await lmsGetCsrftoken();
+    await lmsUserLogin();
+    await lmsGetUserInfo();
+    await lmsGetCourse();
   } catch (err) {
     console.error('[main error]:', err.message)
   }
