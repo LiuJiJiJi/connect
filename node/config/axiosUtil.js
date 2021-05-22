@@ -5,7 +5,7 @@ const baseURL = config.openedx.lms.url
 /**
  * Create axios instance
  */
-console.log('------------------>', baseURL)
+console.log('[ axios baseURL ]', baseURL)
 const axiosInstance = axios.create({
     headers:{
         'Content-Type': 'application/json',
@@ -92,8 +92,9 @@ function deleteFiled(data, filed) {
 
 
 module.exports = {
-    // ------------------------------user-------------------------------------
+    // ------------------------------lms-------------------------------------
     lmsLogin: (data, headers) => callForm('post', '/user_api/v1/account/login_session/', data, headers),
     lmsMe: (data, headers) => call('get', '/api/user/v1/me', data, headers),
+    lmsCourseDiscovery: (data, headers) => call('post', '/search/course_discovery/', data, headers),
 
 };

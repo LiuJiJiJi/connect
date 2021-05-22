@@ -40,10 +40,18 @@ async function lmsMe() {
 }
 
 
+async function lmsCourseDiscovery() {
+  const headers = { ...headersTemplate, Cookie: lmsCookie }
+  const reponse = await axiosUtil.lmsCourseDiscovery({}, headers)
+  console.log("[ lmsCourseDiscovery reponse data ]", reponse.data);
+}
+
+
 async function main() {
   try {
     await lmsLogin();
     await lmsMe();
+    await lmsCourseDiscovery();
   } catch (err) {
     console.error('[main error]:', err)
   }
