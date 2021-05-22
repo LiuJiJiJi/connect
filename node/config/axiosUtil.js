@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
     headers:{
         'Content-Type': 'application/json',
     },
-    timeout: 12000,
+    timeout: 30000,
     baseURL, 
 })
 
@@ -42,7 +42,7 @@ function call(methed, url, data = {}, headers = {'Content-Type':'application/jso
              *         reject(new Error('[Reauest fail]', url, response.status, response.statusText))
              *      }
              */
-            resolve(response.data);
+            resolve(response);
         })
         .catch(err => {
             if (err.response && err.response.data){
@@ -73,7 +73,7 @@ async function callForm(methed, url, data = {}, headers = {'Content-Type':'appli
                 ],
             })
             .then(response => {
-                resolve(response.data);
+                resolve(response);
             })
             .catch(err => {
                 if (err.response && err.response.data){
@@ -94,5 +94,6 @@ function deleteFiled(data, filed) {
 module.exports = {
     // ------------------------------user-------------------------------------
     lmsLogin: (data, headers) => callForm('post', '/user_api/v1/account/login_session/', data, headers),
+    lmsMe: (data, headers) => call('get', '/api/user/v1/me', data, headers),
 
 };
