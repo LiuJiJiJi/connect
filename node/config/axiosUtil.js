@@ -95,6 +95,6 @@ module.exports = {
     // ------------------------------lms-------------------------------------
     lmsLogin: (data, headers) => callForm('post', '/user_api/v1/account/login_session/', data, headers),
     lmsMe: (data, headers) => call('get', '/api/user/v1/me', data, headers),
-    lmsCourseDiscovery: (data, headers) => call('post', '/search/course_discovery/', data, headers),
+    lmsCourseDiscovery: (data, headers) => callForm('post', '/search/course_discovery/', data, headers),
 
 };
