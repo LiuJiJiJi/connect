@@ -34,6 +34,18 @@ module.exports = {
         url: process.env.DIRECTUS_URL,
         email: process.env.DIRECTUS_EMAIL,
         password: process.env.DIRECTUS_PASSWORD,
+    },
+    openedx: {
+        lms: {
+            url: process.env.LMS_URL,
+            email: process.env.LMS_EMAIL,
+            password: process.env.LMS_PASSWORD,
+        },
+        discovery: {
+            url: process.env.DISCOVERY_URL,
+            email: process.env.DISCOVERY_EMAIL,
+            password: process.env.DISCOVERY_PASSWORD,
+        }
     }
 }
 
