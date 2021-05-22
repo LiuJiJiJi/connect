@@ -22,7 +22,7 @@ async function lmsGetCsrftoken() {
   const reponse = await axiosUtil.lmsGetCsrftoken({}, {})
   const reponseCookieMap = buildCookieMap(reponse.headers['set-cookie'])
   csrftoken = reponseCookieMap.csrftoken
-  console.log("[ lmsMe reponse data ]", reponse.status);
+  console.log("[ lmsGetCsrftoken reponse data ]", reponse.status);
 }
 
 async function lmsUserLogin() {
@@ -37,25 +37,24 @@ async function lmsUserLogin() {
   const reponse = await axiosUtil.lmsUserLogin(data, headers)
   const reponseCookieMap = buildCookieMap(reponse.headers['set-cookie'])
   lmsCookies = `csrftoken=${reponseCookieMap["csrftoken"]}; sessionid=${reponseCookieMap["sessionid"]};`;
-  lmsHeaders = { ...headersTemplate, Cookie: lmsCookies, 'X-CSRFToken': reponseCookieMap['csrftoken'] }
+  lmsHeaders = { Cookie: lmsCookies, 'X-CSRFToken': reponseCookieMap['csrftoken'] }
   // console.log("[ lmsLogin lmsCookie ]", lmsCookie);
-  console.log("[ lmsLogin reponse data ]", reponse.data);
+  console.log("[ lmsUserLogin reponse data ]", reponse.data);
 }
 
 
 async function lmsGetUserInfo() {
   const reponse = await axiosUtil.lmsGetUserInfo({}, lmsHeaders)
-  console.log("[ lmsMe reponse data ]", reponse.data);
+  console.log("[ lmsGetUserInfo reponse data ]", reponse.data);
 }
 
 
 async function lmsGetCourse() {
-  console.log(lmsHeaders)
   const reponse = await axiosUtil.lmsGetCourse({
     page_size: 20,
     page_index: 0
   }, lmsHeaders)
-  console.log("[ lmsCourseDiscovery reponse data ]", reponse.data);
+  console.log("[ lmsGetCourse reponse data ]", reponse.data);
 }
 
 

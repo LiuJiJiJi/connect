@@ -96,7 +96,7 @@ module.exports = {
     // ------------------------------lms-------------------------------------
     lmsGetCsrftoken: (data, headers) => call('get', '/courses', data, headers),
     lmsUserLogin: (data, headers) => callForm('post', '/user_api/v1/account/login_session/', data, headers),
-    lmsGetUserInfo: (data, headers) => call('get', '/api/user/v1/me', data, headers),
+    lmsGetUserInfo: (data, headers) => call('get', '/api/user/v1/accounts', data, headers),
     lmsGetCourse: (data, headers) => callForm('post', '/search/course_discovery/', data, headers),
 
 };
