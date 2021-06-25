@@ -88,7 +88,7 @@ async function showDatabaseInfo() {
  async function dropUser() {
     console.error("=========================Drop Opreation is very dangrous! Please proceed with caution!!")
     const user = await readSyncByRl('[Drop User]Please Input user name:');
-    const sql = `drop user if exists'${user}'@'%';`
+    const sql = `drop user if exists '${user}'@'%';`
     return await query(sql);
 }
 
